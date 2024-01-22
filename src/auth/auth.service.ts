@@ -9,11 +9,13 @@ import { LogUserDto } from './dto/LogUser.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly mailService: MailService,
     private jwtService: JwtService,
   ) {}
   async CreateUser(CreateUser: CreateUserDto) {
@@ -44,6 +46,8 @@ export class AuthService {
         password: hashedPassword,
       },
     });
+
+    await this.mailService.sendMailConfirmation(email);
 
     return user;
   }
