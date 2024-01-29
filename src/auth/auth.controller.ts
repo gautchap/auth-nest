@@ -1,9 +1,21 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+  Redirect,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { LogUserDto } from './dto/LogUser.dto';
 import { AuthService } from './auth.service';
 import { ResetPasswordDto } from './dto/ResetPassword.dto';
 import { ResetPasswordConfirmationDto } from './dto/ResetPasswordConfirmation.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +27,7 @@ export class AuthController {
   }
 
   @Get('signup-confirmation')
+  @Redirect('https://google.com')
   CreateUserConfirm(@Query('token') token: string) {
     return this.authService.CreateUserConfirm(token);
   }
@@ -36,5 +49,11 @@ export class AuthController {
     return this.authService.ResetPasswordConfirmation(
       ResetPasswordConfirmation,
     );
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('delete')
+  deleteAccount(@Req() request: Request) {
+    return request.user;
   }
 }
