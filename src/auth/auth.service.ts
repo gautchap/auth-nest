@@ -13,6 +13,7 @@ import { MailService } from '../mail/mail.service';
 import { ResetPasswordDto } from './dto/ResetPassword.dto';
 import { totp } from 'otplib';
 import { ResetPasswordConfirmationDto } from './dto/ResetPasswordConfirmation.dto';
+import { DeleteAccountDto } from './dto/DeleteAccount.dto';
 
 @Injectable()
 export class AuthService {
@@ -154,5 +155,29 @@ export class AuthService {
     });
 
     return { data: 'Password updated' };
+  }
+  async DeleteAccount(
+    id: number,
+    email: string,
+    deleteAccountDto: DeleteAccountDto,
+  ) {
+    const { password } = deleteAccountDto;
+
+    const user = await this.isUserExist(email);
+
+    if (!user) throw new NotFoundException('User not found');
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid)
+      throw new UnauthorizedException('Invalid credentials');
+
+    await this.prismaService.user.delete({
+      where: {
+        id,
+      },
+    });
+
+    return { data: 'Account deleted' };
   }
 }
