@@ -5,7 +5,6 @@ import {
   Get,
   Post,
   Query,
-  Redirect,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -28,7 +27,6 @@ export class AuthController {
   }
 
   @Get('signup-confirmation')
-  @Redirect('https://google.com')
   CreateUserConfirm(@Query('token') token: string) {
     return this.authService.CreateUserConfirm(token);
   }

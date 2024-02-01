@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { createTestAccount, createTransport } from 'nodemailer';
+import { createTransport } from 'nodemailer';
 
 @Injectable()
 export class MailService {
   private async transporter() {
-    const account = await createTestAccount();
     const transport = createTransport({
-      host: 'localhost',
-      port: 1025,
-      ignoreTLS: true,
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT),
       auth: {
-        user: account.user,
-        pass: account.pass,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
       },
     });
 
@@ -28,7 +26,7 @@ export class MailService {
         address: process.env.EMAIL_FROM,
       },
       subject: 'Signup Confirmation',
-      html: `<a href='http://localhost:3000/auth/signup-confirmation?token=${token}'>Confirm your email address</a>
+      html: `<a href='${process.env.PROJECT_URL}/auth/signup-confirmation?token=${token}'>Confirm your email address</a>
      `,
     });
   }

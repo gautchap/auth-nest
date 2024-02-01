@@ -124,7 +124,7 @@ export class AuthService {
 
     const token = totp.generate(process.env.TOTP_SECRET);
 
-    const url = `http://localhost:3000/auth/reset-password-confirmation`;
+    const url = `${process.env.PROJECT_URL}/reset-password`;
 
     await this.mailService.sendResetPassword(email, url, token, time);
 
@@ -156,6 +156,7 @@ export class AuthService {
 
     return { data: 'Password updated' };
   }
+
   async DeleteAccount(
     id: number,
     email: string,
