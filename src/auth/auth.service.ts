@@ -29,6 +29,7 @@ export class AuthService {
         email,
       },
     });
+
     return user;
   }
 
@@ -56,6 +57,8 @@ export class AuthService {
         password: hashedPassword,
       },
     });
+
+    delete user.password;
 
     const payload = { sub: user.id, username: user.username };
 
