@@ -19,9 +19,10 @@ async function bootstrap() {
   const port = process.env.PORT || 3000;
 
   const config = new DocumentBuilder()
-    .setTitle('auth endpoints')
-    .setDescription('auth examples')
+    .setTitle('Auth endpoints')
+    .setDescription('Auth endpoints for the application.')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
